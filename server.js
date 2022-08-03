@@ -13,12 +13,12 @@ app.use(cors());
 const db = knex({
     client: 'pg',
     connection: {
-        // connectionString : process.env.DATABASE_URL,
-        // ssl: { rejectUnauthorized: false }
-        host : '127.0.0.1',
-        user : 'postgres',
-        password : 'Adebayo7',
-        database : 'Taste-Element-Database'
+        connectionString : process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+        // host : '127.0.0.1',
+        // user : 'postgres',
+        // password : '',
+        // database : 'Taste-Element-Database'
     }
 });
 
@@ -29,7 +29,8 @@ app.post('/login', async (req, res) => {
         if(user) {
             const isValid = await bcrypt.compare(password, user[0].hashpassword);
             if(isValid) {
-                res.status(200).json(user[0])
+                const {hashpassword, ...data} = await user[0]
+                res.status(200).json(data)
             } else {
                 res.status(400).json('Invalid Email or Password')
             }
